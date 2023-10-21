@@ -16,6 +16,9 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/',[MainController::class,"HomePage"]);
-Route::get('/singlepost',[MainController::class,"SinglePostPage"]);
-Route::post('/register',[UserController::class,"register"]);
+Route::get('/',[UserController::class,"showCorrectHomePage"]);
+
+
+Route::post('/register',[UserController::class,'register']);
+Route::post('/login',[UserController::class,'login']);
+Route::post('/logout',[UserController::class,'logout']);
