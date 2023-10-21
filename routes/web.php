@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,4 @@ use App\Http\Controllers\MainController;
 
 Route::get('/',[MainController::class,"HomePage"]);
 Route::get('/singlepost',[MainController::class,"SinglePostPage"]);
+Route::post('/register',[UserController::class,"register"]);
