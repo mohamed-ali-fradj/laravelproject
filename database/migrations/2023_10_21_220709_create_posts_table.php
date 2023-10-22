@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users',function($table)  {
-            $table->string('favoriteColor');
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('title');
+            $table->longtext('body');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        schema::table('users',function($table) {
-            $table->$table->dropColumn('favoriteColor');
-        });
+        Schema::dropIfExists('posts');
     }
 };
