@@ -31,3 +31,6 @@ Route::get('/profile/{Tempuser:username}',[UserController::class,'profile']);
 Route::delete('/post/{post}',[postController::class,'delete'])->middleware('can:delete,post');
 Route::get('/post/{post}/edit',[postController::class,'showEditForm'])->middleware('can:update,post');
 Route::put('/post/{post}',[postController::class,'actuallyupdate'])->middleware('can:update,post');
+
+Route::get('/manage-avatar',[UserController::class,'showAvatarForm'])->middleware('mustBeLoggedIn');
+Route::post('/manage-avatar',[UserController::class,'storeAvatar'])->middleware('mustBeLoggedIn');
