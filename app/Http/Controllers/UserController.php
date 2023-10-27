@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\View;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,11 +39,36 @@ class UserController extends Controller
         return view('avatar-form');
     }
 
+    private function getSharedData($user) {
+        $currentlyFollowing = 0;
+
+        if (auth()->check()) {
+            $currentlyFollowing = Follow::where([['user_id', '=', auth()->user()->id], ['followeduser', '=', $user->id]])->count();
+        }
+
+        View::share('sharedData', ['currentlyFollowing' => $currentlyFollowing, 'avatar' => $user->avatar, 'username' => $user->username, 'postCount' => $user->posts()->count(),'followerCount'=>$user->followers()->count(),'followingCount'=>$user->followingTheseUsers()->count()]);
+    }
+
 
     public function profile(User $Tempuser){
+      $this->getSharedData($Tempuser);
+       
 
-        return view('profile-post',['avatar'=> $Tempuser->avatar ,'username'=>$Tempuser->username,'posts' => $Tempuser->posts()->latest()->get(), 'postCount' => $Tempuser->posts()->count()]);
+        return view('profile-post',['username'=>$Tempuser->username,'posts' => $Tempuser->posts()->latest()->get()]);
     }
+    public function profilefollowers(User $Tempuser){
+        $this->getSharedData($Tempuser);
+
+        return view('profile-followers', ['followers' => $Tempuser->followers()->latest()->get()]);
+    }
+
+    public function profilefollowing(User $Tempuser){
+        $this->getSharedData($Tempuser);
+       return view('profile-following', ['following' => $Tempuser->followingTheseUsers()->latest()->get()]);
+    }
+
+
+  
 
     public function logout(){
         auth()->logout();
@@ -52,7 +79,7 @@ class UserController extends Controller
     public function showCorrectHomePage(){
 
       if (  auth()->check()){
-        return  view('homepage-feed');
+        return  view('homepage-feed',['posts' =>auth()->user()->feedPosts()->latest()->paginate(5)]);
       }
       else {
         return view('homepage');
