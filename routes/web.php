@@ -30,6 +30,7 @@ Route::post('/logout',[UserController::class,'logout'])->middleware('mustBeLogge
 Route::get('/create-post',[postController::class,'showCreateForm'])->middleware('mustBeLoggedIn');
 Route::post('/create-post',[postController::class,'storeNewPost'])->middleware('mustBeLoggedIn');
 Route::get('/post/{post}',[postController::class,'viewSinglePost']);   
+Route::get('/search/{term}',[postController::class,'search']);  
 
 //Profile Related Routes
 Route::get('/profile/{Tempuser:username}',[UserController::class,'profile']);
